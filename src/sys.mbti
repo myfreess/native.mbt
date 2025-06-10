@@ -1,0 +1,136 @@
+package "myfreess/sys"
+
+import(
+  "moonbitlang/core/buffer"
+  "moonbitlang/core/bytes"
+  "moonbitlang/core/string"
+)
+
+// Values
+fn decode_sys_error_kind_linux(Int) -> SysErrorKind
+
+fn decode_sys_error_kind_win32(Int) -> SysErrorKind
+
+// Types and methods
+pub type CStr Bytes
+fn CStr::inner(Self) -> Bytes
+
+#external
+pub type File
+fn File::close(Self) -> Bool
+fn[P : AsPath] File::create(P) -> Self?
+fn File::metadata(Self) -> Metadata?
+fn[P : AsPath] File::open(P) -> Self?
+fn File::read_all(Self) -> Bytes?
+fn File::symlink_metadata(Self) -> Metadata?
+fn File::write_all(Self, Bytes) -> Bool
+
+#external
+pub type FileType
+
+pub type Metadata
+fn Metadata::filesize(Self) -> Int
+fn Metadata::filetype(Self) -> FileType
+fn Metadata::is_dir(Self) -> Bool
+fn Metadata::is_file(Self) -> Bool
+fn Metadata::is_symlink(Self) -> Bool
+fn Metadata::permissions(Self) -> Permissions
+
+#external
+pub type OpenOptions
+
+pub type OsStr Bytes
+fn OsStr::from(@string.StringView) -> Self
+fn OsStr::inner(Self) -> Bytes
+impl Add for OsStr
+impl Show for OsStr
+impl AsCStr for OsStr
+impl AsPath for OsStr
+
+pub type OsStrBuilder @buffer.T
+fn OsStrBuilder::checked_push(Self, @string.StringView) -> Unit
+fn OsStrBuilder::from(@string.StringView) -> Self
+fn OsStrBuilder::from_osstr(OsStr) -> Self
+fn OsStrBuilder::inner(Self) -> @buffer.T
+fn OsStrBuilder::new(size_hint~ : Int = ..) -> Self
+fn OsStrBuilder::push(Self, @string.StringView) -> Unit
+fn OsStrBuilder::push_char(Self, Char) -> Unit
+fn OsStrBuilder::push_osstr(Self, OsStr) -> Unit
+fn OsStrBuilder::to_osstr(Self) -> OsStr
+impl AsCStr for OsStrBuilder
+
+pub type Path OsStr
+fn Path::as_view(Self) -> @bytes.View
+fn Path::from(@string.StringView) -> Self
+fn Path::inner(Self) -> OsStr
+fn Path::join(Self, ArrayView[@string.StringView]) -> Self
+fn Path::op_add(Self, Self) -> Self
+impl AsCStr for Path
+impl AsPath for Path
+
+#external
+pub type Permissions
+fn Permissions::is_readonly(Self) -> Bool
+
+pub suberror SysError {
+  Raw(Int)
+  Simple(SysErrorKind)
+  Message(String)
+}
+
+pub enum SysErrorKind {
+  NotFound
+  PermissionDenied
+  ConnectionRefused
+  ConnectionReset
+  HostUnreachable
+  NetworkUnreachable
+  ConnectionAborted
+  NotConnected
+  AddrInUse
+  AddrNotAvailable
+  NetworkDown
+  BrokenPipe
+  AlreadyExists
+  WouldBlock
+  NotADirectory
+  IsADirectory
+  DirectoryNotEmpty
+  ReadOnlyFilesystem
+  FilesystemLoop
+  StaleNetworkFileHandle
+  InvalidInput
+  InvalidData
+  TimedOut
+  WriteZero
+  StorageFull
+  NotSeekable
+  QuotaExceeded
+  FileTooLarge
+  ResourceBusy
+  ExecutableFileBusy
+  Deadlock
+  CrossesDevices
+  TooManyLinks
+  InvalidFilename
+  ArgumentListTooLong
+  Interrupted
+  Unsupported
+  UnexpectedEof
+  OutOfMemory
+  InProgress
+  Other
+  Uncategorized
+}
+
+// Type aliases
+
+// Traits
+trait AsCStr
+impl AsCStr for String
+impl AsCStr for @string.StringView
+
+trait AsPath : AsCStr
+impl AsPath for String
+impl AsPath for @string.StringView
+

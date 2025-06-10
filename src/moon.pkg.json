@@ -1,0 +1,17 @@
+{
+    "import": [
+        "myfreess/sys/win32",
+        "myfreess/sys/linux"
+    ],
+    "link": {
+        "native": {
+            "cc-flags": ""
+        }
+    },
+    "native-stub": [
+        "stub.c"
+    ],
+    "supported-targets": [
+        "native"
+    ]
+}
